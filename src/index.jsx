@@ -4,25 +4,10 @@ import App from "./components/App";
 import { HashRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
-import persistDataLocally from "./middleware/persist-data-locally";
+import thunkMiddleware from "redux-thunk";
 import rootReducer from "./reducers/index";
 
-let retrievedState;
-try {
-  retrievedState = localStorage.getItem("reduxStore");
-  if (retrievedState === null) {
-    retrievedState = {};
-  }
-  retrievedState = JSON.parse(retrievedState);
-} catch (err) {
-  retrievedState = {};
-}
-
-const store = createStore(
-  rootReducer,
-  retrievedState,
-  applyMiddleware(persistDataLocally)
-);
+const store = createStore(rootReducer, applyMiddleware(thunkMiddleware));
 
 let unsubscribe = store.subscribe(() => console.log(store.getState()));
 
